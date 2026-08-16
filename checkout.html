@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CarWale - Checkout</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body { background:#000; color:#fff; }
+    footer { background:#111; }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background:#000; padding:15px 50px;">
+  <a class="navbar-brand" href="index.html">CarWale</a>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+      <li class="nav-item"><a class="nav-link active" href="checkout.html">Checkout</a></li>
+      <li class="nav-item"><a class="nav-link" href="my-orders.html">My Orders</a></li>
+      <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
+      <li class="nav-item"><a class="nav-link" href="contact.html">Contact Us</a></li>
+      <li class="nav-item"><a class="nav-link" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fas fa-search"></i> Search</a></li>
+      <li class="nav-item"><a class="nav-link" data-bs-toggle="modal" data-bs-target="#cartModal"><i class="fas fa-shopping-cart"></i> <span id="cart-count" class="badge bg-danger">0</span></a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Checkout Section -->
+<!-- Checkout Section -->
+<section class="container py-5" style="margin-top:80px;">
+  <h2 class="text-center text-info mb-4">Checkout</h2>
+  
+  <!-- Cart Summary -->
+  <div class="mb-4 p-3 bg-dark rounded shadow" id="cart-summary">
+    <h5 class="text-info">🛒 Your Cart</h5>
+    <div id="cart-items" class="mb-2"></div>
+    <h6>Total: ₹<span id="cart-total">0</span></h6>
+  </div>
+
+  <!-- Checkout Form -->
+  <form id="checkout-form" class="row g-3 justify-content-center">
+    <div class="col-md-5"><input type="text" class="form-control" name="name" placeholder="Full Name" required></div>
+    <div class="col-md-5"><input type="email" class="form-control" name="email" placeholder="Email" required></div>
+    <div class="col-md-5"><input type="tel" class="form-control" name="phone" placeholder="Phone" required></div>
+    <div class="col-md-5"><input type="text" class="form-control" name="address" placeholder="Address" required></div>
+    <!-- Hidden fields to store cart details -->
+    <input type="hidden" name="car" id="order-car">
+    <input type="hidden" name="price" id="order-price">
+    <div class="col-md-10"><button class="btn btn-info w-100 fw-bold">Place Order</button></div>
+  </form>
+</section>
+
+<!-- Footer -->
+<footer class="text-light py-5">
+  <div class="container text-center">
+    <p>&copy; 2025 Car Showroom. All Rights Reserved.</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// Load cart from localStorage
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+const cartItems = document.getElementById("cart-items");
+const cartTotal = document.getElementById("cart-total");
+
+if (cart.length === 0) {
+  cartItems.innerHTML = "<p class='text-muted'>Your cart is empty.</p>";
+} else {
+  let total = 0;
+  cart.forEach(item => {
+    total += parseInt(item.price);
+    cartItems.innerHTML += `<p>${item.name} - ₹${item.price}</p>`;
+  });
+  cartTotal.innerText = total;
+
+  // Set hidden fields for order
+  document.getElementById("order-car").value = cart.map(c => c.name).join(", ");
+  document.getElementById("order-price").value = total;
+}
+
+// Save order to localStorage
+document.getElementById("checkout-form").addEventListener("submit", function(e) {
+  e.preventDefault();
+  if (cart.length === 0) {
+    alert("⚠️ Your cart is empty!");
+    return;
+  }
+
+  const formData = new FormData(this);
+  const order = {};
+  formData.forEach((value, key) => order[key] = value);
+
+  let orders = JSON.parse(localStorage.getItem("orders")) || [];
+  orders.push(order);
+  localStorage.setItem("orders", JSON.stringify(orders));
+
+  // Clear cart
+  localStorage.removeItem("cart");
+
+  alert("✅ Order placed successfully!");
+  window.location.href = "my-orders.html";
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CarWale - My Orders</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body { background:#000; color:#fff; }
+    footer { background:#111; }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background:#000; padding:15px 50px;">
+  <a class="navbar-brand" href="index.html">CarWale</a>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+      <li class="nav-item"><a class="nav-link" href="checkout.html">Checkout</a></li>
+      <li class="nav-item"><a class="nav-link active" href="my-orders.html">My Orders</a></li>
+      <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
+      <li class="nav-item"><a class="nav-link" href="contact.html">Contact Us</a></li>
+      <li class="nav-item"><a class="nav-link" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fas fa-search"></i> Search</a></li>
+      <li class="nav-item"><a class="nav-link" data-bs-toggle="modal" data-bs-target="#cartModal"><i class="fas fa-shopping-cart"></i> <span id="cart-count" class="badge bg-danger">0</span></a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Orders Section -->
+<section class="container py-5" style="margin-top:80px;">
+  <h2 class="text-center text-info mb-4">My Orders</h2>
+  <div id="orders-list" class="row g-4"></div>
+</section>
+
+<!-- Footer -->
+<footer class="text-light py-5">
+  <div class="container text-center">
+    <p>&copy; 2025 Car Showroom. All Rights Reserved.</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// Load orders from localStorage
+const orders = JSON.parse(localStorage.getItem("orders")) || [];
+const list = document.getElementById("orders-list");
+
+orders.forEach((order, index) => {
+  const card = document.createElement("div");
+  card.className = "col-md-6";
+  card.innerHTML = `
+    <div class="card bg-dark text-light border-0 shadow-lg">
+      <div class="card-body">
+        <h5 class="card-title text-info">${order.car}</h5>
+        <p><strong>Total Price:</strong> ₹${order.price}</p>
+        <p><strong>Name:</strong> ${order.name}</p>
+        <p><strong>Email:</strong> ${order.email}</p>
+        <p><strong>Phone:</strong> ${order.phone}</p>
+        <p><strong>Address:</strong> ${order.address}</p>
+        <button class="btn btn-danger btn-sm" onclick="deleteOrder(${index})">Delete</button>
+      </div>
+    </div>
+  `;
+  list.appendChild(card);
+});
+
+
+
+function deleteOrder(i) {
+  let orders = JSON.parse(localStorage.getItem("orders")) || [];
+  orders.splice(i, 1);
+  localStorage.setItem("orders", JSON.stringify(orders));
+  location.reload();
+}
+</script>
+</body>
+</html>
